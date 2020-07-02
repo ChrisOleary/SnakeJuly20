@@ -10,7 +10,13 @@ namespace Snake20200629
         public int radius = 30;
         private Vector2 previousPosition;
         public int distanceBetweenParts;
-       
+        public bool collided = false;
+        public static List<SnakeBody> snakeBodies = new List<SnakeBody>();
+
+        public int dirX;
+        public int dirY;
+     
+
         public Vector2 PreviousPosition
         {
             get { return previousPosition; }
@@ -23,8 +29,7 @@ namespace Snake20200629
             set { position = value; }
         }
 
-        public bool collided = false;
-        public static List<SnakeBody> snakeBodies = new List<SnakeBody>();
+   
         
         // Constructors
         public SnakeBody()
@@ -34,21 +39,32 @@ namespace Snake20200629
         public SnakeBody(Vector2 newPos)
         {
             position = newPos;
-            previousPosition = newPos;
-            distanceBetweenParts = (radius * Game1.bodyCount);
         }
 
         // Methods
-        public void Update(Vector2 playerPosition)
+        public void Update(GameTime gameTime)
         {
-            if (Game1.score == 1 && Game1.bodyCount == 0)
+            KeyboardState kstate = Keyboard.GetState();
+
+            if (kstate.IsKeyDown(Keys.Up))
             {
-                SnakeBody.snakeBodies.Add(new SnakeBody(new Vector2(playerPosition.X, playerPosition.Y)));
-                // previousPosition = new Vector2(playerPosition.X, playerPosition.Y);
+                this.dirX = 0;
+                this.dirY = -1;
             }
-            if (Game1.score > Game1.bodyCount && Game1.bodyCount != 0) // when the score gets increaed and bodypart already exists
+            else if (kstate.IsKeyDown(Keys.Down))
             {
-                SnakeBody.snakeBodies.Add(new SnakeBody(new Vector2(snakeBodies[1 - Game1.bodyCount].Position.X, snakeBodies[1 - Game1.bodyCount].Position.Y)));
+                this.dirX = 0;
+                this.dirY = 1;
+            }            
+            else if (kstate.IsKeyDown(Keys.Left))
+            {
+                this.dirX = -1;
+                this.dirY = 0;
+            }            
+            else if (kstate.IsKeyDown(Keys.Right))
+            {
+                this.dirX = 1;
+                this.dirY = 0;
             }
         }
 

@@ -25,6 +25,7 @@ namespace Snake20200629
 
         public static int bodyCount = 0;
         public static int score = 0;
+        public bool firstBodyAdded = false;
 
        
 
@@ -69,7 +70,6 @@ namespace Snake20200629
                 Exit();
 
             
-
             snakeHead.Update();
 
             // snakehead and egg collision 
@@ -79,19 +79,14 @@ namespace Snake20200629
                 egg.Update(); // move egg to new position and increase score
             }
 
-            // adds first body part
-            if (score == 1 && bodyCount == 0)
+
+
+            foreach (SnakeBody body in SnakeBody.snakeBodies)
             {
-                snakeBody.Update(new Vector2(snakeHead.Position.X - 25, snakeHead.Position.Y - 25));
-                bodyCount++;
+                snakeBody.Update(gameTime);
             }
-            // add subsequnt body part
-            // if score = 2 and body parts = 1 then add another body part
-            if (bodyCount == (score - 1))
-            {
-                SnakeBody.snakeBodies.Add(new SnakeBody(new Vector2(snakeHead.Position.X - 25, snakeHead.Position.Y -25)));
-                bodyCount++;
-            }
+
+           
 
             base.Update(gameTime);
         }
@@ -137,28 +132,12 @@ namespace Snake20200629
 
             // snake body
             foreach (SnakeBody body in SnakeBody.snakeBodies)
-            {      
+            { 
                 if (snakeHead.isAlive)
                 {
-                    switch (snakeHead.direction)
-                    {
-                        case Direction.Up:
-                            // when a body part is added, it needs to be drawn behind the previous one
-                            // if the head = x, then body part 1 needs to be x - body distance. body part 2 needs to be x - (body distance * 2)
-                            spriteBatch.Draw(snake_body, new Vector2(snakeHead.Position.X - 25, snakeHead.Position.Y + body.distanceBetweenParts), Color.White);
-                            break;
-                        case Direction.Down:
-                            spriteBatch.Draw(snake_body, new Vector2(body.Position.X + snakeHead.Position.X, body.Position.Y + snakeHead.Position.Y), Color.White);
-                            break;
-                        case Direction.Left:
-                            spriteBatch.Draw(snake_body, new Vector2(body.Position.X + snakeHead.Position.X, body.Position.Y - snakeHead.Position.Y), Color.White);
-                            break;
-                        case Direction.Right:
-                            spriteBatch.Draw(snake_body, new Vector2(body.Position.X + snakeHead.Position.X, body.Position.Y + snakeHead.Position.Y), Color.White);
-                            break;
-                        default:
-                            break;
-                    }
+                    // when a body part is added, it needs to be drawn behind the previous one
+                    // if the head = x, then body part 1 needs to be x - body distance. body part 2 needs to be x - (body distance * 2)
+                    spriteBatch.Draw(snake_body, new Vector2(body.Position.X - body.radius, body.Position.Y - body.radius), Color.White);
                 }
             }
 
