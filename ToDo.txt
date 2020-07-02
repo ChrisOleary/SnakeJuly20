@@ -1,0 +1,4 @@
+﻿- snake body increase in size
+- start/game over screen
+- collision with itself
+- collision with walls
