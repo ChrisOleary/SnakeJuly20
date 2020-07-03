@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,21 +8,10 @@ namespace Snake20200629
     class SnakeBody
     {
         private Vector2 position;
-        public int radius = 30;
-        private Vector2 previousPosition;
-        public int distanceBetweenParts;
-        public bool collided = false;
         public static List<SnakeBody> snakeBodies = new List<SnakeBody>();
-
-        public int dirX;
-        public int dirY;
-     
-
-        public Vector2 PreviousPosition
-        {
-            get { return previousPosition; }
-            set { previousPosition = value; }
-        }
+        public int bodyCount = 0;
+        public int speed = 2;
+        public int radius = 25;
 
         public Vector2 Position
         {
@@ -29,44 +19,29 @@ namespace Snake20200629
             set { position = value; }
         }
 
-   
-        
-        // Constructors
         public SnakeBody()
         {
-
         }
-        public SnakeBody(Vector2 newPos)
+
+        public SnakeBody(Vector2 pos)
         {
-            position = newPos;
+            position = pos;
         }
-
-        // Methods
-        public void Update(GameTime gameTime)
+      
+        public void Update(Vector2 playerPos, GameTime gameTime, Direction dir)
         {
-            KeyboardState kstate = Keyboard.GetState();
+            if (bodyCount > 0)
+            {
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds; // get delta time
 
-            if (kstate.IsKeyDown(Keys.Up))
-            {
-                this.dirX = 0;
-                this.dirY = -1;
+                Vector2 moveDir = playerPos - position;
+                moveDir.Normalize(); // Normalize reduces the number to 1
+                position += (moveDir * speed * dt);
             }
-            else if (kstate.IsKeyDown(Keys.Down))
-            {
-                this.dirX = 0;
-                this.dirY = 1;
-            }            
-            else if (kstate.IsKeyDown(Keys.Left))
-            {
-                this.dirX = -1;
-                this.dirY = 0;
-            }            
-            else if (kstate.IsKeyDown(Keys.Right))
-            {
-                this.dirX = 1;
-                this.dirY = 0;
-            }
+            
         }
+
+        
 
     }
 }

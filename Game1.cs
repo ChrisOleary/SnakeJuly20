@@ -14,7 +14,7 @@ namespace Snake20200629
         Texture2D snakeHead_up;
         Texture2D snakeHead_down;
         Texture2D egg_sprite;
-        Texture2D snake_body;
+        Texture2D snakeBody_sprite;
 
         SnakeHead snakeHead = new SnakeHead();
         SnakeBody snakeBody = new SnakeBody();
@@ -58,7 +58,7 @@ namespace Snake20200629
             snakeHead_down = Content.Load<Texture2D>("down");
             egg_sprite = Content.Load<Texture2D>("egg");
             font = Content.Load<SpriteFont>("Impact12");
-            snake_body = Content.Load<Texture2D>("snakeBody");
+            snakeBody_sprite = Content.Load<Texture2D>("snakeBody");
             
         }
 
@@ -77,15 +77,16 @@ namespace Snake20200629
             if (Vector2.Distance(snakeHead.Position, egg.EggPos) < sum) // if snake and egg collide
             {
                 egg.Update(); // move egg to new position and increase score
+                SnakeBody.snakeBodies.Add(new SnakeBody(snakeHead.Position));
+                snakeBody.bodyCount++;
+               
             }
-
 
 
             foreach (SnakeBody body in SnakeBody.snakeBodies)
             {
-                snakeBody.Update(gameTime);
+                snakeBody.Update(snakeHead.Position, gameTime, snakeHead.direction);
             }
-
            
 
             base.Update(gameTime);
@@ -97,7 +98,7 @@ namespace Snake20200629
             base.Draw(gameTime);        
             spriteBatch.Begin();
 
-            // snake  HEAD direction
+            // snake HEAD direction
             if (!snakeHead.isAlive)
             {
                 spriteBatch.Draw(snakeHead_right, new Vector2(snakeHead.Position.X - snakeHead.radius, snakeHead.Position.Y - snakeHead.radius), Color.White);
@@ -121,6 +122,11 @@ namespace Snake20200629
                     default:
                         break;
                 }
+                // snake body
+                foreach (SnakeBody body in SnakeBody.snakeBodies)
+                {
+                    spriteBatch.Draw(snakeBody_sprite, new Vector2(body.Position.X - body.radius, body.Position.Y - body.radius), Color.White);
+                }
             }
            
 
@@ -130,16 +136,9 @@ namespace Snake20200629
             // score
             spriteBatch.DrawString(font, "Eggs eaten: " + score, new Vector2(3, 3), Color.White);
 
-            // snake body
-            foreach (SnakeBody body in SnakeBody.snakeBodies)
-            { 
-                if (snakeHead.isAlive)
-                {
-                    // when a body part is added, it needs to be drawn behind the previous one
-                    // if the head = x, then body part 1 needs to be x - body distance. body part 2 needs to be x - (body distance * 2)
-                    spriteBatch.Draw(snake_body, new Vector2(body.Position.X - body.radius, body.Position.Y - body.radius), Color.White);
-                }
-            }
+           
+          
+           
 
 
             spriteBatch.End();

@@ -1,26 +1,84 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Snake20200629
 {
-    class SnakeHead
+    public class SnakeHead : Component                                
     {
-        private Vector2 position = new Vector2(100, 100);
+        #region MEMBERS
+
+        public float _layer { get; set; }
+        public Vector2 _origin { get; set; }
+        protected Vector2 _position { get; set; }
+        protected float _rotation { get; set; }
+        protected Texture2D _texture { get; set; }
+
         private int speed = 2;
         public int radius = 25;
         public bool isAlive = false; // make false so player starts game still
-        public Direction direction = Direction.Right;
-        public int bodyHeadDistance = 30;
 
+        #endregion
+
+        #region PROPERTIES
+        public Color Color { get; set; }
+
+        /// <summary>
+        /// the sprite we want to follow
+        /// </summary>
+        public SnakeHead FollowTarget { get; set; }
+
+        /// <summary>
+        /// How close we want to be to our target
+        /// </summary>
+        public float FollowDistance { get; set; }
+
+        public Vector2 Direction { get; set; }
+
+        public float RotationVelocity = 3f;
+
+        /// <summary>
+        /// How fast sprite moves to follow sprite its follwoing
+        /// </summary>
+        public float LinearVelocity = 4;
+
+        public float Layer
+        {
+            get { return _layer; }
+            set { _layer = value; }
+        }
+
+        public Vector2 Origin
+        {
+            get { return _origin; }
+            set { _origin = value; }
+        }
 
         public Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return _position; }
+            set { _position = value; }
         }
 
+        public Rectangle Rectangle
+        {
+            get // create a rectangle around our sprite
+            { 
+                return new Rectangle((int)Position.X - (int)Origin.X, (int)Position.Y - (int)Origin.Y, _texture.Width,_texture.Height);
+            }
+        }
 
-        public void Update()
+        public float Rotation
+        {
+            get { return _rotation; }
+            set { _rotation = value; }
+        }
+        #endregion
+
+
+        #region METHODS
+        public override void Update(GameTime gameTime)
         {
             // Get key presses
             KeyboardState kstate = Keyboard.GetState();
@@ -66,12 +124,16 @@ namespace Snake20200629
                         break;
                 }
             }
-            
+        
             
 
         }
 
-
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            throw new NotImplementedException(); 
+        }
+        #endregion
 
 
     }
