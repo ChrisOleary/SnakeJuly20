@@ -77,9 +77,37 @@ namespace Snake20200629
         #endregion
 
 
-        #region METHODS
+        #region METHODS/Constructors
+
+        public SnakeHead(Texture2D texture)
+        {
+            _texture = texture;
+            Origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
+            Color = Color.White;
+        }
+
+        public SnakeHead SetFollowTarget(SnakeHead followTarget, float followDistance)
+        {
+            FollowTarget = followTarget;
+            FollowDistance = FollowDistance;
+            return this;
+        }
+
+        protected void Follow() // protected so it can only get called inside the update method
+        {
+            if (FollowTarget == null)
+                return;
+
+            var distance = FollowTarget.Position - this.Position; // returns vector of the difference between who we are following and current sprite
+            _rotation = (float)Math.Atan2(distance.Y, distance.X);
+
+            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
+        }
+
         public override void Update(GameTime gameTime)
         {
+            Follow();
+
             // Get key presses
             KeyboardState kstate = Keyboard.GetState();
             if (kstate.IsKeyDown(Keys.Up))
